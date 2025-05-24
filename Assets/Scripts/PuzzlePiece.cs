@@ -6,6 +6,6 @@ public class PuzzlePiece : MonoBehaviour
 
     void Start()
     {
-        //GetComponent<SpriteRenderer>().material.mainTexture = texture;
+        GetComponent<SpriteRenderer>().material.mainTexture = pieceImage;
     }
 }

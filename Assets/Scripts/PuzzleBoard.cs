@@ -5,7 +5,6 @@ public class Puzzle : MonoBehaviour
     private const float LINE_WIDTH = 0.02f;
 
     public int pieceCount;
-    public Texture2D originalImage;
     public int pixelsPerUnit;
 
     private int src_width;
@@ -17,6 +16,7 @@ public class Puzzle : MonoBehaviour
     private int pieceWidth;
     private int pieceHeight;
 
+    private Texture2D originalImage;
     private Vector3[,] points;
     private Texture2D[,] pieceImages;
     private LineRenderer[] x_lineRenderers;
@@ -25,6 +25,9 @@ public class Puzzle : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Sprite sprite = GetComponent<SpriteRenderer>().sprite;
+        originalImage = sprite.texture;
+
         src_width = originalImage.width;
         src_height = originalImage.height;
 
@@ -82,24 +85,19 @@ public class Puzzle : MonoBehaviour
         {
             for (int y = 0; y < pieces_y + 1; y++)
             {
-                int x_pos = 0;
-                int y_pos = 0;
-                int x_width = 0;
-                int y_width = 0;
-
                 // The first and last row/column are half the overflow amount.
-                piece_pos_x = PiecePosXInPixels(x) / pixelsPerUnit;
-                piece_pos_y = PiecePosYInPixels(y) / pixelsPerUnit;
+                float x_pos = PiecePosXInPixels(x) / sprite.pixelsPerUnit;
+                float y_pos = PiecePosYInPixels(y) / sprite.pixelsPerUnit;
 
                 points[x, y] = new Vector3(x_pos, y_pos, 0);
 
                 Debug.Log($"points[{x}, {y}]: {points[x, y]}");
 
                 x_lineRenderers[y].positionCount += 1;
-                x_lineRenderers[y].SetPosition(x, points[x, y] / pixelsPerUnit);
+                x_lineRenderers[y].SetPosition(x, points[x, y]);
 
                 y_lineRenderers[x].positionCount += 1;
-                y_lineRenderers[x].SetPosition(y, points[x, y] / pixelsPerUnit);
+                y_lineRenderers[x].SetPosition(y, points[x, y]);
 
                 CreatePuzzlePiece(x, y, points[x, y]);
             }
@@ -119,15 +117,43 @@ public class Puzzle : MonoBehaviour
         int dst_width_x = PieceWidthXInPixels(x);
         int dst_width_y = PieceWidthYInPixels(y);
 
+        // Create a new texture for the piece
         Texture2D pieceImage = new Texture2D(dst_width_x, dst_width_y);
-        pieceImage.CopyPixels(originalImage, 0, 0, 0, source_pos_x, source_pos_y, dst_width_x, dst_width_y, 0, 0);
+        pieceImage.filterMode = FilterMode.Bilinear;
+        pieceImage.wrapMode = TextureWrapMode.Clamp;
+
+        // Create a temporary RenderTexture to handle the copy
+        RenderTexture rt = RenderTexture.GetTemporary(
+            dst_width_x,
+            dst_width_y,
+            0,
+            RenderTextureFormat.ARGB32,
+            RenderTextureReadWrite.Linear
+        );
+
+        for (int i = 0; i < dst_width_x; i++)
+        {
+            for (int j = 0; j < dst_width_y; j++)
+            {
+                Color c = originalImage.GetPixel(source_pos_x + i, source_pos_y + j);
+                pieceImage.SetPixel(i, j, c);
+            }
+        }
         pieceImage.Apply();
 
-        GameObject pieceObj = new GameObject($"PuzzlePiece_{x}_{y}");
-        pieceObj.transform.parent = transform;
-        pieceObj.transform.localPosition = position;
-        pieceObj.AddComponent<PuzzlePiece>();
-        pieceObj.GetComponent<PuzzlePiece>().pieceImage = pieceImage;
+        // Create the piece GameObject
+        GameObject piece = new GameObject($"Piece_{x}_{y}");
+        piece.transform.position = position;
+        piece.transform.parent = transform;
+
+        // Add a SpriteRenderer component
+        SpriteRenderer renderer = piece.AddComponent<SpriteRenderer>();
+        renderer.sprite = Sprite.Create(
+            pieceImage,
+            new Rect(0, 0, dst_width_x, dst_width_y),
+            new Vector2(0.5f, 0.5f),
+            100f  // Pixels per unit
+        );
     }
 
     private int PiecePosXInPixels(int x)
