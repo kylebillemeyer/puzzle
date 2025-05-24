@@ -365,7 +365,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!212 &596667450
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -621,8 +621,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84d2eb910be504ff49bd2f30b5a20da8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  size: {x: 12.8, y: 7.2}
   pieceCount: 500
+  originalImage: {fileID: 2800000, guid: e1d2eec00b457425693dd95bd55ac7ae, type: 3}
+  pixelsPerUnit: 0
 --- !u!4 &1714428237
 Transform:
   m_ObjectHideFlags: 0

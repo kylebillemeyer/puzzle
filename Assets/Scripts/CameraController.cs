@@ -31,7 +31,6 @@ public class CameraController : MonoBehaviour
         mainCamera = GetComponent<Camera>();
         if (mainCamera == null)
         {
-            Debug.LogError("Camera component not found on GameObject!");
             enabled = false;
             return;
         }
@@ -75,7 +74,6 @@ public class CameraController : MonoBehaviour
         // Apply movement
         if (moveDirection != Vector3.zero)
         {
-            Debug.Log($"moveDirection: {moveDirection}");
             moveDirection.Normalize();  // Ensure consistent speed in all directions
             transform.position += moveDirection * moveSpeed * Time.deltaTime;
         }
