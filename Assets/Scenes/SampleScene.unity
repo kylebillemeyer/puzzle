@@ -269,12 +269,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9f77448d1d003354c901c7cc759a293a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enableEdgeScrolling: 0
   screenThresholdX: 50
   screenThresholdY: 50
   moveSpeed: 5
-  zoomSpeed: 50
+  enableDragScrolling: 1
+  dragSpeed: 1
+  zoomSpeed: 100
   minZoom: 2
   maxZoom: 20
+  puzzlePieceLayer:
+    serializedVersion: 2
+    m_Bits: 64
 --- !u!1 &619394800
 GameObject:
   m_ObjectHideFlags: 0
@@ -389,8 +395,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 84d2eb910be504ff49bd2f30b5a20da8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  borderPixels: 4
+  borderColor: {r: 1, g: 0.76815236, b: 0, a: 1}
   pieceCount: 500
   pixelsPerUnit: 0
+  showGrid: 1
 --- !u!4 &1011269573
 Transform:
   m_ObjectHideFlags: 0
@@ -450,12 +459,12 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: e1d2eec00b457425693dd95bd55ac7ae, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 0217f221eb43cfb43a52209ec58db650, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
-  m_Size: {x: 12.8, y: 7.2}
+  m_Size: {x: 38.399998, y: 21.599998}
   m_AdaptiveModeThreshold: 0.5
   m_SpriteTileMode: 0
   m_WasSpriteAssigned: 1
